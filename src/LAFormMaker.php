@@ -488,6 +488,33 @@ class LAFormMaker
                     }
                     $out .= Form::select($field_name . "[]", $popup_vals, $default_val, $params);
                     break;
+                case 'Select':
+                    $out .= '<label for="' . $field_name . '">' . $label . $required_ast . ' :</label>';
+
+                    unset($params['data-rule-maxlength']);
+                    $params['data-placeholder'] = "Seçiniz " . str_plural($label);
+                    unset($params['placeholder']);
+                    $params['multiple'] = "false";
+                    $params['rel'] = "select2";
+                    if($default_val == null) {
+                        if($defaultvalue != "") {
+                            $default_val = json_decode($defaultvalue);
+                        } else {
+                            $default_val = "";
+                        }
+                    }
+                    // Override the edit value
+                    if(isset($row) && isset($row->$field_name)) {
+                        $default_val = json_decode($row->$field_name);
+                    }
+
+                    if($popup_vals != "") {
+                        $popup_vals = LAFormMaker::process_values($popup_vals);
+                    } else {
+                        $popup_vals = array();
+                    }
+                    $out .= Form::select($field_name . "[]", $popup_vals, $default_val, $params);
+                    break;
                 case 'Name':
                     $out .= '<label for="' . $field_name . '">' . $label . $required_ast . ' :</label>';
                     
